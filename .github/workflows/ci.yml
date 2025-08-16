@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Chrome Extension
+        run: npm run build:chrome
+
+      - name: Build Firefox Extension
+        run: npm run build:firefox
+
+      - name: Check build artifacts
+        run: |
+          echo "Checking Chrome build artifacts..."
+          ls -la dist/chrome/
+          echo "Checking Firefox build artifacts..."
+          ls -la dist/firefox/
