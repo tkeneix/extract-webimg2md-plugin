@@ -10,3 +10,6 @@ dist/
 
 # development files
 doc/
+
+# claude config
+.claude/
