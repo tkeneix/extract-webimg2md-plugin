@@ -26,12 +26,8 @@ jobs:
       - name: Build Chrome Extension
         run: npm run build:chrome
 
-      - name: Build Firefox Extension
-        run: npm run build:firefox
-
       - name: Check build artifacts
         run: |
           echo "Checking Chrome build artifacts..."
-          ls -la dist/chrome/
-          echo "Checking Firefox build artifacts..."
-          ls -la dist/firefox/
+          ls -la dist/
+          
