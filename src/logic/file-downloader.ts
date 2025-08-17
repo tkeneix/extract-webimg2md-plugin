@@ -201,9 +201,15 @@ export async function downloadMarkdownWithImages(
     // マークダウン内の画像URLを相対パスに置換
     let processedMarkdown = markdown;
     imageMap.forEach((relativePath, originalUrl) => {
+      const escapedUrl = originalUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      
       // ![alt](url) 形式を置換
-      const imageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${originalUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\)`, 'g');
+      const imageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${escapedUrl}\\)`, 'g');
       processedMarkdown = processedMarkdown.replace(imageRegex, `![$1](${relativePath})`);
+      
+      // [![alt](url)](link_url) 形式のリンクURLも置換（画像が同じURLにリンクしている場合）
+      const linkedImageRegex = new RegExp(`\\[!\\[([^\\]]*)\\]\\([^)]+\\)\\]\\(${escapedUrl}\\)`, 'g');
+      processedMarkdown = processedMarkdown.replace(linkedImageRegex, `[![$1](${relativePath})](${relativePath})`);
     });
     
     // マークダウンファイルをダウンロード
