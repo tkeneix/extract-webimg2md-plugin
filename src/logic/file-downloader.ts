@@ -203,13 +203,13 @@ export async function downloadMarkdownWithImages(
     imageMap.forEach((relativePath, originalUrl) => {
       const escapedUrl = originalUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       
-      // ![alt](url) 形式を置換
-      const imageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${escapedUrl}\\)`, 'g');
-      processedMarkdown = processedMarkdown.replace(imageRegex, `![$1](${relativePath})`);
-      
-      // [![alt](url)](link_url) 形式をシンプルな ![alt](url) 形式に変換
+      // [![alt](url)](link_url) 形式をシンプルな ![alt](url) 形式に変換（先に処理）
       const linkedImageRegex = new RegExp(`\\[!\\[([^\\]]*)\\]\\(${escapedUrl}\\)\\]\\([^)]+\\)`, 'g');
       processedMarkdown = processedMarkdown.replace(linkedImageRegex, `![$1](${relativePath})`);
+      
+      // ![alt](url) 形式を置換（後で処理）
+      const imageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${escapedUrl}\\)`, 'g');
+      processedMarkdown = processedMarkdown.replace(imageRegex, `![$1](${relativePath})`);
     });
     
     // マークダウンファイルをダウンロード
