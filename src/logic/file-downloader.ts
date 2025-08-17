@@ -207,9 +207,9 @@ export async function downloadMarkdownWithImages(
       const imageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${escapedUrl}\\)`, 'g');
       processedMarkdown = processedMarkdown.replace(imageRegex, `![$1](${relativePath})`);
       
-      // [![alt](url)](link_url) 形式のリンクURLも置換（画像が同じURLにリンクしている場合）
-      const linkedImageRegex = new RegExp(`\\[!\\[([^\\]]*)\\]\\([^)]+\\)\\]\\(${escapedUrl}\\)`, 'g');
-      processedMarkdown = processedMarkdown.replace(linkedImageRegex, `[![$1](${relativePath})](${relativePath})`);
+      // [![alt](url)](link_url) 形式をシンプルな ![alt](url) 形式に変換
+      const linkedImageRegex = new RegExp(`\\[!\\[([^\\]]*)\\]\\(${escapedUrl}\\)\\]\\([^)]+\\)`, 'g');
+      processedMarkdown = processedMarkdown.replace(linkedImageRegex, `![$1](${relativePath})`);
     });
     
     // マークダウンファイルをダウンロード
